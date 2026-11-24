@@ -1,0 +1,54 @@
+
+name: Construir JOCA TV 2.0
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [principal]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Extrair projeto
+        run: |
+          unzip -q JOCA-TV-2.0-Projeto.zip -d projeto
+          ROOT=$(dirname "$(find projeto -name settings.gradle.kts -o -name settings.gradle | head -n 1)")
+          if [ -z "$ROOT" ]; then
+            echo "Não foi encontrado o arquivo settings.gradle"
+            exit 1
+          fi
+          echo "ANDROID_PROJECT_DIR=$ROOT" >> "$GITHUB_ENV"
+
+      - name: Compilar aplicativo
+        run: |
+          cd "$ANDROID_PROJECT_DIR"
+          gradle assembleDebug
+
+      - name: Salvar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: JOCA-TV-2.0-APK
+          path: projeto/**/app/build/outputs/apk/debug/*.apk
+          
