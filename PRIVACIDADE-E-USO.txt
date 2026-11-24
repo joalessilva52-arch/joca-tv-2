@@ -1,0 +1,5 @@
+JOCA TV 2.0 é um reprodutor de mídia. Não fornece programação.
+Não adicione listas ou credenciais sem autorização do titular do serviço.
+Esta versão não possui backend próprio e não sincroniza listas com servidores JOCA.
+Credenciais Xtream são mantidas apenas na memória da sessão nesta versão.
+A conexão de login Xtream exige HTTPS. URLs M3U podem apontar para HTTP ou HTTPS; prefira HTTPS.
